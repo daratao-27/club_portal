@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Page</title>
+    <style>
+        form {
+            border: 3px solid #f1f1f1;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #04AA6D;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        .container {
+            padding: 5px;
+        }
+
+        span.psw {
+            float: right;
+            padding-top: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <form id="registerForm">
+        <div class="container">
+            <h1>Registration Page</h1>
+
+            <label for="uname"><b>Name</b></label>
+            <input type="text" placeholder="Enter Name" name="uname" id="uname" required>
+
+            <label for="email"><b>Email</b></label>
+            <input type="email" placeholder="Enter Email" name="email" id="email" required>
+
+            <label for="psw"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
+
+            <label for="role"><b>Role</b></label>
+            <select name="role" id="role">
+                <option value="member">Member</option>
+                <option value="president">President</option>
+                <option value="secretary">Secretary</option>
+            </select>
+
+            <button type="submit">Register</button>
+        </div>
+        <div class="container" style="background-color: #f1f1f1">
+            <span class="psw">Already have an account? <a href="login.html">Login</a></span>
+        </div>
+    </form>
+</body>
+
+<script type="text/javascript">
+    function processForm(event) {
+        // prevent the default form submission behavior
+        event.preventDefault();
+
+        // use document.getElementById to get the values of the form fields
+        // document.getElementById returns an object, so we need to use .value to get the value of the input field
+        const uname = document.getElementById('uname').value;
+        const psw = document.getElementById('psw').value;
+        const email = document.getElementById('email').value;
+        const role = document.getElementById('role').value;
+
+        const data = JSON.stringify({
+            name: uname,
+            password: psw,
+            email: email
+        });
+    
+
+        // create a new XMLHttpRequest object
+        const xhr = new XMLHttpRequest();
+        // set the onload callback function to handle the response from the server
+        xhr.addEventListener('readystatechange', function () {
+            if (this.readyState === XMLHttpRequest.DONE) {
+                const response = JSON.parse(this.responseText);
+                alert(response.message);
+                console.log('Response:', response, this.status);
+                if (this.status === 200 || this.status === 201) {
+                    window.location.href = 'login.html';
+                }
+            }
+        });
+        // open a POST request to the /register endpoint
+        xhr.open('POST', `http://localhost:5000/register-${role}`);
+        // set the request header to indicate that the request body is JSON
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        // send the request with the data as a JSON string
+        xhr.send(data);
+    }
+    const registerForm = document.getElementById('registerForm');
+    registerForm.addEventListener('submit', processForm);
+</script>
+
+
+</html>

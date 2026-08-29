@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        form {
+            border: 3px solid #f1f1f1;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #04AA6D;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        .container {
+            padding: 5px;
+        }
+
+        span.psw {
+            float: right;
+            padding-top: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <form id="loginForm">
+        <div class="container">
+            <h1>Login Page</h1>
+            <label for="uname"><b>Name</b></label>
+            <input type="text" placeholder="Enter Name" name="uname" id="uname" required>
+
+            <label for="psw"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
+
+            <label for="role"><b>Role</b></label>
+            <select name="role" id="role">
+                <option value="member">Member</option>
+                <option value="president">President</option>
+                <option value="secretary">Secretary</option>
+            </select>
+
+            <button type="submit">Login</button>
+        </div>
+        <div class="container" style="background-color: #f1f1f1;">
+            <span class="psw"><a href="register.html">Sign Up</a></span>
+        </div>
+    </form>
+</body>
+<script type="text/javascript">
+    function processForm(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        const uname = document.getElementById('uname').value;
+        const password = document.getElementById('psw').value;
+        const role = document.getElementById('role').value;
+
+        // Create a data object to send to the server
+        var data = JSON.stringify({
+            name: uname,
+            password: password
+        });
+
+        // create an XMLHttpRequest object
+
+        var xhr = new XMLHttpRequest();
+        // add event listener to handle the response from the server
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                const response = JSON.parse(this.responseText);
+                if (this.status === 200) {
+                    localStorage.setItem('token', response.token); // Store the token in localStorage
+                    if (response.role === 'member') {
+                        window.location.href = 'member.html';
+                    } else if (response.role === 'president') {
+                        window.location.href = 'president.html';
+                    } else if (response.role === 'secretary') {
+                        window.location.href = 'secretary.html';
+                    }
+
+                } else {
+                    // login api failed, show an error message
+                    alert(response.message || 'Login failed. Please try again.');
+                }
+            }
+        });
+        xhr.open("POST", `http://localhost:5000/login-${role}`);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(data);
+    }
+
+    const form = document.getElementById('loginForm');
+    form.addEventListener('submit', processForm);
+</script>
+
+</html>
