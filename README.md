@@ -1,4 +1,3 @@
-
 # Club Portal — Secure Auth (Email OTP MFA + Session Timeouts)
 
 A small Node.js / Express / MongoDB club membership app with role-based access
@@ -23,11 +22,38 @@ OTP)** and **Session Timeouts**.
 
 ---
 
+## Preview
+
+The app uses a minimal design system shared across every page: a warm dotted
+background, a single teal accent, monospace labels, and consistent cards and
+modals for both security measures.
+
+<table>
+  <tr>
+    <td align="center"><b>Sign in</b></td>
+    <td align="center"><b>Create account</b></td>
+  </tr>
+  <tr>
+    <td><img src="docs/images/Sign_up_page.png" alt="Club Portal sign-in page with name, password and role fields" width="100%"></td>
+    <td><img src="docs/images/Register_page.png" alt="Club Portal registration page with name, email, password and role fields" width="100%"></td>
+  </tr>
+</table>
+
+Registration asks for an email address because that's where the login
+verification codes are sent.
+
+---
+
 ## 1. MFA / 2FA — Email OTP
 
 **Problem it fixes:** a correct password alone is enough to fully authenticate.
 If it's leaked, reused, or guessed, an attacker gets complete account access —
 there's no second factor standing between a stolen password and a live session.
+
+![OWASP #1 — MFA / 2FA Email OTP: the vulnerability, the countermeasure, the verification screen and the emailed code](docs/images/OWASP_1_Details.png)
+
+*Summary of the vulnerability and the countermeasure, with the "Check your
+email" verification screen and the one-time-code email a user receives.*
 
 **How it works:**
 
@@ -72,6 +98,11 @@ const MFA_MAX_ATTEMPTS = 5;               // wrong guesses allowed before a code
 **Problem it fixes:** a session left open on a shared or unattended device
 stays authenticated for the full lifetime of its token — anyone with
 browser or physical access can keep acting as that user indefinitely.
+
+![OWASP #2 — Session Timeouts: the vulnerability, the countermeasure and the "Still there?" warning modal](docs/images/OWASP_2_Details.png)
+
+*Summary of the vulnerability and the countermeasure, with the "Still there?"
+warning modal that appears before an idle session is logged out.*
 
 **How it works:**
 
@@ -132,6 +163,8 @@ const WARNING_MS = 20 * 1000;      // warning shown this long before logout
 │   ├── member.html
 │   ├── president.html
 │   └── secretary.html
+├── docs/
+│   └── images/            # screenshots used in this README
 ├── server.js
 └── .env                   # not committed — see below
 ```
