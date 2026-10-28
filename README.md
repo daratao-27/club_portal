@@ -199,7 +199,7 @@ account (Google Account → Security), then generate one at
 Use the 16-character code (no spaces) as `EMAIL_PASS` — **not** the normal
 Gmail password.
 
-> **Do not commit `.env`.** Add it to `.gitignore` before pushing to GitHub —
+> **Do not commit `.env`.** Add it to `.gitignore` before pushing to GitHub,
 > it contains live database and email credentials.
 
 ### 3. Run the server
@@ -227,14 +227,3 @@ Then open `http://localhost:5000/register.html` to create an account.
 | GET | `/member-protected` `/president-protected` `/secretary-protected` | Yes (role-checked) | Example protected resource per role |
 
 ---
-
-## Known limitations / design notes
-
-- MFA is opt-in after the first login rather than mandatory from account
-  creation — a deliberate design choice, not an oversight.
-- `tokenVersion` invalidation is all-or-nothing per account: logging out
-  invalidates every active session for that user across all devices, not
-  just the current one.
-- There's no rate limiting on the initial password-login endpoint itself
-  (only on the MFA verify/resend steps) — Account Lockout / Rate Limiting on
-  `/login-*` was out of scope for this submission's two chosen measures.
